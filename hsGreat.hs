@@ -72,16 +72,16 @@ main = do
 awaitWinner :: MVar [Int] -> MVar [Int] -> IO()
 awaitWinner aChan bChan  =
 	    if varReady aChan then	    
-	       printWinner aChan
+	       printWinner aChan "a"
 	    else if varReady bChan then
-	       printWinner bChan
+	       printWinner bChan "b"
 	    else awaitWinner aChan bChan
 
 varReady :: MVar [Int] -> Bool
 varReady var = not $ unsafePerformIO $ isEmptyMVar var
 
-printWinner :: MVar [Int] -> IO()
-printWinner chan = do
-	    putStrLn "A won!"
+printWinner :: MVar [Int] -> [Char] -> IO()
+printWinner chan name = do
+	    putStrLn (name ++ " won!")
 	    nums <- takeMVar chan
 	    putStrLn $ show nums
